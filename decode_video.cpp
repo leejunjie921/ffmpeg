@@ -58,6 +58,11 @@ int DecodeVideo::DecodeInitial() {
       videostate_->pCodecCtx->width, videostate_->pCodecCtx->height, 1);
 
   videostate_->packet = (AVPacket *)av_malloc(sizeof(AVPacket));
+
+  videostate_->img_convert_ctx = sws_getContext(
+      videostate_->pCodecCtx->width, videostate_->pCodecCtx->height,
+      videostate_->pCodecCtx->pix_fmt, 960, 720, AV_PIX_FMT_YUV420P,
+      SWS_BICUBIC, NULL, NULL, NULL);
   mediastate_ = mediastate;
   decodeRun_ = true;
   return ALG_SUCCESS;
@@ -67,7 +72,7 @@ void DecodeVideo::ThreadVideoDecode() {
   while (decodeRun_) {
     while (av_read_frame(mediastate_->pFormatCtx, videostate_->packet) >= 0) {
       if (videostate_->videoindex == videostate_->packet->stream_index) {
-        //printf("index %d\n", videostate_->videoindex);
+        // printf("index %d\n", videostate_->videoindex);
       }
       av_packet_unref(videostate_->packet);
     }
