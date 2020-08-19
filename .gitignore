@@ -1,0 +1,8 @@
+*.mp4
+*.mp3
+*.exe
+*.yuv
+*.h264
+ffmpeg*
+Debug
+x64
